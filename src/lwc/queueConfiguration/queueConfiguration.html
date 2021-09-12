@@ -1,0 +1,52 @@
+<template>
+
+    <lightning-card title="Sample Lookup (Lightning Web Component)">
+        <div class="slds-form slds-form_stacked slds-var-m-around_xx-large">
+            <c-queuelookup onsearch={handleSearch} label="Group" placeholder="Search Groups" onqueuechange={handleQueueChange}>
+            </c-queuelookup>
+            
+            <c-userlookup onsearch={handleSearch} label="Search User" placeholder="Search Salesforce" onuserchange={handleUserChange}>
+            </c-userlookup>            
+            
+            <div class="slds-var-m-top_large">
+                <lightning-button variant="brand" label="Add to Queue/Group" onclick={addUserToTheQueue}></lightning-button>
+            </div>
+        </div>
+    </lightning-card>
+
+    <lightning-card title="Users in currently selected Queue/Group" icon-name="custom:custom63">
+        <div class="slds-m-around_medium">
+            <template if:true={userGroupInfoList}>
+                <lightning-datatable
+                    key-field="groupMemberId"
+                    data={userGroupInfoList}
+                    hide-checkbox-column
+                    show-row-number-column
+                    columns={columnsInUserGroup}
+                    onrowaction={handleRowAction}>
+                </lightning-datatable>
+            </template>
+            <template if:true={error}>
+                {error}
+            </template>
+        </div>
+    </lightning-card>     
+
+    <lightning-card title="All Users" icon-name="custom:custom63">
+        <div class="slds-m-around_medium">
+           
+            <template if:true={usersList}>
+                <lightning-datatable
+                    key-field="Id"
+                    data={usersList}
+                    hide-checkbox-column
+                    show-row-number-column
+                    columns={columnsAll}>
+                </lightning-datatable>
+            </template>
+            <template if:true={error}>
+                {error}
+            </template>
+        </div>
+    </lightning-card>
+</template>

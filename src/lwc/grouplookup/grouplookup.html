@@ -1,0 +1,17 @@
+<template>
+    <lightning-card title="Group Lookup (Lightning Web Component)">
+        <div class="slds-form slds-form_stacked slds-var-m-around_xx-large">
+            <c-lookup
+                selection={initialSelection}
+                errors={errors}
+                onsearch={handleLookupSearch}
+                onselectionchange={handleLookupSelectionChange}
+                label="Search"
+                placeholder="Search Salesforce"
+                is-multi-entry={isMultiEntry}
+                new-record-options={newRecordOptions}
+                required>
+            </c-lookup>
+        </div>
+    </lightning-card>
+</template>

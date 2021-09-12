@@ -1,0 +1,14 @@
+<template>
+    <c-lookup
+        selection={initialSelection}
+        errors={errors}
+        onsearch={handleLookupSearch}
+        onselectionchange={handleLookupSelectionChange}
+        label="User Lookup"
+        placeholder="Search"
+        is-multi-entry={isMultiEntry}
+        new-record-options={newRecordOptions}
+        required
+    >
+    </c-lookup>
+</template>
