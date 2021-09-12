@@ -10,12 +10,5 @@ public with sharing class AccountQEventHandler extends QEventHandler {
 
     public void process() {
         processCommon();
-
-        for (Contact contactRecord : contactsToInsertList) {
-            casesToInsertList.add(createUncommittedCase(contactRecord.AccountId,
-                    contactRecord.Id, contactRecord.FirstName));
-        }
-
-        insert casesToInsertList;
     }
 }
