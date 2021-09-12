@@ -4,14 +4,9 @@ import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
 import getUsersList from '@salesforce/apex/QueueConfigurationController.getUsersList';
 import getUsersInTheQueue from '@salesforce/apex/QueueConfigurationController.getUsersInTheQueue';
-import removeMemberFromTheQueue from '@salesforce/apex/QueueConfigurationController.removeMemberFromTheQueue';
 import addMemberToTheQueue from '@salesforce/apex/QueueConfigurationController.addMemberToTheQueue';
-import getGroupMember from '@salesforce/apex/QueueConfigurationController.getGroupMember';
 import getUserGroupInfoList from '@salesforce/apex/QueueConfigurationController.getUserGroupInfoList';
 import deleteGroupMember from '@salesforce/apex/QueueConfigurationController.deleteGroupMember';
-
-/** The delay used when debouncing event handlers before invoking Apex. */
-const DELAY = 300;
 
 const actions = [
     { label: 'Delete', name: 'delete' },
@@ -55,10 +50,11 @@ export default class QueueConfiguration extends LightningElement {
 
     @track userId;
     @track queueId;
- 
     @track error;
     @track usersList;
+    
     @track userGroupInfoList;
+
     @wire(getUsersList)
     wiredUsers({
         error,
@@ -83,7 +79,7 @@ export default class QueueConfiguration extends LightningElement {
         }
     }*/
 
-    @wire(getUserGroupInfoList, {queueId: '$queueId'})
+    /* @wire(getUserGroupInfoList, {queueId: '$queueId'})
     wiredUserGroupInfoInTheQueue({
         error,
         data
@@ -95,7 +91,7 @@ export default class QueueConfiguration extends LightningElement {
         } else if (error) {
             this.error = error;
         }
-    }
+    }*/
 
     groupMemberId = '';
 
@@ -108,11 +104,46 @@ export default class QueueConfiguration extends LightningElement {
     }
 
     handleQueueChange(event){
-        console.log('handleQueueChange Called 1.8');
+        console.log('handleQueueChange Called 1.10');
         
         this.queueId = event.detail;
 
         console.log(event.detail);
+
+        this.refreshUserQueueInfoList();
+    }
+
+    refreshUserQueueInfoList() {
+        console.log('inside refreshUserQueueInfoList 1.1');
+
+        getUserGroupInfoList({ queueId: this.queueId })
+        .then((result) => {
+            this.userGroupInfoList = result;
+            this.error = undefined;
+        })
+        .catch((error) => {
+            this.error = error;
+            this.userGroupInfoList = undefined;
+        });
+
+        /*getUserGroupInfoList({queueId : this.queueId}).then(() => {
+            this.dispatchEvent(
+                new ShowToastEvent({
+                    title: 'Success',
+                    message: 'UserGroup List loaded successfully!',
+                    variant: 'success'
+                })
+            );
+        })
+        .catch(error => {
+            this.dispatchEvent(
+                new ShowToastEvent({
+                    title: 'Error in loading UserGroup List',
+                    message: error.body.message,
+                    variant: 'error'
+                })
+            );
+        });*/
     }
 
     addUserToTheQueue() {
@@ -130,7 +161,8 @@ export default class QueueConfiguration extends LightningElement {
             );
 
             // refreshing table data using refresh apex
-            return refreshApex(this.userGroupInfoList);
+            //refreshApex(this.userGroupInfoList);
+            this.refreshUserQueueInfoList();
         })
         .catch(error => {
             this.dispatchEvent(
@@ -174,6 +206,9 @@ export default class QueueConfiguration extends LightningElement {
                     variant: 'success'
                 })
             );
+
+            //refreshApex(this.userGroupInfoList);
+            this.refreshUserQueueInfoList();
         })
         .catch(error => {
             this.dispatchEvent(
